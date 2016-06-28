@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="HeartAPP"
+  id="myeclipse.1463808882903"
+  context-root="/HeartAPP"
+  j2ee-spec="6.0"
+  archive="HeartAPP.war">
+  <attributes>
+    <attribute name="webrootdir" value="WebRoot" />
+  </attributes>
+</project-module>
+

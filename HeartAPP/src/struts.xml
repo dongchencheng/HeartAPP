@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+
+	<package name="default" extends="struts-default">
+
+		<interceptors>
+			<!--判断是否登录 和 是否有访问权限 -->
+			<interceptor name="auth" class="filter.LoginInterceptor" />
+
+			<interceptor-stack name="myStack">
+				<interceptor-ref name="auth"></interceptor-ref>
+				<interceptor-ref name="token"><!-- 令牌防重复提交 -->
+					<param name="includeMethods">login,update,delete,insert</param>
+				</interceptor-ref>
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+
+		<default-interceptor-ref name="myStack"><!-- 设置为默认拦截器，应用到所有action -->
+		</default-interceptor-ref>
+
+		<global-results>
+			<result name="noLogin">/login.jsp</result><!-- 拦截没有权限返回结果 -->
+			<result name="invalid.token">/pages/common/error.jsp</result><!-- 重复提交 -->
+		</global-results>
+
+		<action name="loginAction" class="action.LoginAction">
+			<result name="true">/pages/index.jsp</result><!-- 登录成功 -->
+			<result name="false">/login.jsp</result><!-- 密码或用户名错误 -->
+			<result name="limit">/login.jsp</result><!-- 权限受限 -->
+			<result name="update">/login.jsp</result><!-- 修改密码成功 -->
+			<result name="logout">/login.jsp</result><!-- 修改密码成功 -->
+			<result name="failure">/pages/common/update.jsp</result><!-- 修改密码时旧密码错误 -->
+		</action>
+		
+		<action name="normaluserAction" class="action.user.userInformation.NormaluserAction"><!-- 普通用户 -->
+			<result name="success">/pages/user/userInformation/normaluser.jsp</result>
+		</action>
+		
+		<action name="userlevelAction" class="action.user.userInformation.UserlevelAction"><!-- 用户级别 -->
+			<result name="success">/pages/user/userInformation/userlevel.jsp</result>
+			<result name="searchById">/pages/user/userInformation/updateUserlevel.jsp</result>
+			<result name="insert">/pages/user/userInformation/addUserlevel.jsp</result><!-- 添加错误 -->
+			<result name="update">/pages/user/userInformation/updateUserlevel.jsp</result><!-- 修改错误 -->
+		</action>
+		
+		<action name="userstatusAction" class="action.user.userInformation.UserstatusAction"><!-- 用户状态 -->
+			<result name="success">/pages/user/userInformation/userstatus.jsp</result>
+			<result name="searchById">/pages/user/userInformation/updateUserstatus.jsp</result>
+			<result name="insert">/pages/user/userInformation/addUserstatus.jsp</result><!-- 添加错误 -->
+			<result name="update">/pages/user/userInformation/updateUserstatus.jsp</result><!-- 修改错误 -->
+		</action>
+		
+		<action name="usercreatetypeAction" class="action.user.userInformation.UsercreatetypeAction"><!-- 用户来源 -->
+			<result name="success">/pages/user/userInformation/usercreatetype.jsp</result>
+			<result name="searchById">/pages/user/userInformation/updateUsercreatetype.jsp</result>
+			<result name="insert">/pages/user/userInformation/addUsercreatetype.jsp</result><!-- 添加错误 -->
+			<result name="update">/pages/user/userInformation/updateUsercreatetype.jsp</result><!-- 修改错误 -->
+		</action>
+		
+		<action name="nuserclickedAction" class="action.user.userResource.NuserclickedAction"><!-- 用户点击 -->
+			<result name="success">/pages/user/userResource/nuserclicked.jsp</result>
+		</action>
+		
+		<action name="usercollectAction" class="action.user.userResource.UsercollectAction"><!-- 用户收藏 -->
+			<result name="success">/pages/user/userResource/usercollect.jsp</result>
+		</action>
+		
+		<action name="nuservisitedAction" class="action.user.userResource.NuservisitedAction"><!-- 用户访问 -->
+			<result name="success">/pages/user/userResource/nuservisited.jsp</result>
+		</action>
+		
+		<action name="nuserlikedAction" class="action.user.userResource.NuserlikedAction"><!-- 用户喜欢 -->
+			<result name="success">/pages/user/userResource/nuserliked.jsp</result>
+		</action>
+		
+		<action name="nuserrecommenedAction" class="action.user.userResource.NuserrecommenedAction"><!-- 用户推荐 -->
+			<result name="success">/pages/user/userResource/nuserrecommened.jsp</result>
+		</action>
+		
+		<action name="nusersearchedAction" class="action.user.userResource.NusersearchedAction"><!-- 用户搜索 -->
+			<result name="success">/pages/user/userResource/nusersearched.jsp</result>
+		</action>
+		
+		<action name="catharsisAction" class="action.user.userCatharsis.CatharsisAction"><!-- 宣泄信息 -->
+			<result name="success">/pages/user/userCatharsis/catharsis.jsp</result>
+		</action>
+		
+		<action name="nusercathrelAction" class="action.user.userCatharsis.NusercathrelAction"><!-- 宣泄关系 -->
+			<result name="success">/pages/user/userCatharsis/nusercathrel.jsp</result>
+			<result name="searchById">/pages/user/userCatharsis/updateNusercathrel.jsp</result>
+			<result name="searchPositive">/pages/user/userCatharsis/addNusercathrel.jsp</result>
+		</action>
+		
+		<action name="positivesuggestionAction" class="action.user.userPositiveSuggestion.PositivesuggestionAction"><!-- 积极暗示 -->
+			<result name="success">/pages/user/userPositiveSuggestion/positivesuggestion.jsp</result>
+			<result name="insert">/pages/user/userPositiveSuggestion/addPositivesuggestion.jsp</result><!-- 添加错误 -->
+			<result name="update">/pages/user/userPositiveSuggestion/updatePositivesuggestion.jsp</result><!-- 修改错误 -->
+			<result name="searchById">/pages/user/userPositiveSuggestion/updatePositivesuggestion.jsp</result>
+			<result name="searchResource">/pages/user/userPositiveSuggestion/addPositivesuggestion.jsp</result>
+		</action>
+		
+		<action name="nusersugrelAction" class="action.user.userPositiveSuggestion.NusersugrelAction"><!-- 积极暗示关系 -->
+			<result name="success">/pages/user/userPositiveSuggestion/nusersugrel.jsp</result>
+		</action>
+		
+		<action name="franchiseeAction" class="action.franchisee.FranchiseeAction"><!-- 加盟商 -->
+			<result name="success">/pages/franchisee/franchisee.jsp</result>
+			<result name="searchById">/pages/franchisee/updateFranchisee.jsp</result>
+			<result name="insert">/pages/franchisee/addFranchisee.jsp</result><!-- 添加错误 -->
+			<result name="update">/pages/franchisee/updateFranchisee.jsp</result><!-- 修改错误 -->
+		</action>
+		
+		<action name="counselorAction" class="action.counselor.CounselorAction"><!-- 咨询师 -->
+			<result name="success">/pages/counselor/counselor.jsp</result>
+			<result name="searchById">/pages/counselor/updateCounselor.jsp</result>
+			<result name="insert">/pages/counselor/addCounselor.jsp</result><!-- 添加错误 -->
+			<result name="update">/pages/counselor/updateCounselor.jsp</result><!-- 修改错误 -->
+			<result name="searchFranchisee">/pages/counselor/addCounselor.jsp</result>
+		</action>
+		
+		
+		
+		<action name="taskAction" class="action.patient.TaskAction"><!-- 任务信息 -->
+			<result name="success">/pages/patient/task.jsp</result>
+		</action>
+		
+		<action name="taskfinishedAction" class="action.patient.TaskfinishedAction"><!-- 任务完成信息 -->
+			<result name="success">/pages/patient/taskfinished.jsp</result>
+		</action>
+		
+	</package>
+
+</struts>    
