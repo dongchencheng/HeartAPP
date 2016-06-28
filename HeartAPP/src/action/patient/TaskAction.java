@@ -3,13 +3,13 @@ package action.patient;
 import java.util.ArrayList;
 import java.util.List;
 
-import server.CBoNormaluser;
-import server.CBoNuserclicked;
-import server.CBoResource;
+import server.CBoCounselor;
+import server.CBoPatient;
+import server.CBoTask;
 
 import com.opensymphony.xwork2.ActionSupport;
 
-import dao.Nuserclicked;
+import dao.Task;
 
 /*------------------ 开发者信息 --------------------*/
 /**   开发者：董晨程
@@ -22,14 +22,17 @@ import dao.Nuserclicked;
 /*------------------ 开发者信息 --------------------*/
 
 public class TaskAction extends ActionSupport {
-	// 用户点击action
+	// 任务信息action
 
-	private static final long serialVersionUID = -6171313746166834463L;
-
+	private static final long serialVersionUID = 954146994802482196L;
+	
 	private int page = 1;// 页数
 	private int allpage = 1;// 总页数
 	
-	private List<DtoNuserclicked> list;// 显示列表
+	private List<DtoTask> list;// 显示列表
+	
+	private String SidCounselor = "";// 搜索咨询师ID
+	private String SidPatient = "";// 搜索患者ID
 	
 	public int getPage() {
 		return page;
@@ -43,72 +46,94 @@ public class TaskAction extends ActionSupport {
 	public void setAllpage(int allpage) {
 		this.allpage = allpage;
 	}
-	public List<DtoNuserclicked> getList() {
+	public List<DtoTask> getList() {
 		return list;
 	}
-	public void setList(List<DtoNuserclicked> list) {
+	public void setList(List<DtoTask> list) {
 		this.list = list;
+	}
+	public String getSidCounselor() {
+		return SidCounselor;
+	}
+	public void setSidCounselor(String sidCounselor) {
+		SidCounselor = sidCounselor;
+	}
+	public String getSidPatient() {
+		return SidPatient;
+	}
+	public void setSidPatient(String sidPatient) {
+		SidPatient = sidPatient;
 	}
 	
 	// 搜索全部
 	public String execute() {
 		// 搜索关键词
 		String words = "";
+		
+		// 检查是否有搜索词
+		if (!SidCounselor.equals("") && !SidPatient.equals("")) {
+			words = " where idCounselor = " + SidCounselor + " and idPatient = "
+					+ SidPatient;
+		} else if (SidCounselor.equals("") && !SidPatient.equals("")) {
+			words = " where idPatient = " + SidPatient;
+		} else if (!SidCounselor.equals("") && SidPatient.equals("")) {
+			words = " where idCounselor = " + SidCounselor;
+		}
 
-		CBoNuserclicked cbo = new CBoNuserclicked();
+		CBoTask cbo = new CBoTask();
 		
 		// 计算页数
-		int temp = cbo.countNuserclicked(words);
+		int temp = cbo.countTask(words);
 		if (temp % 10 == 0) {
 			allpage = temp / 10;
 		} else {
 			allpage = temp / 10 + 1;
 		}
 		
-		// 获得Nuserclicked列表
-		List<Nuserclicked> tList = cbo.searchNuserclickedByWords(words, page);
+		// 获得Task列表
+		List<Task> tList = cbo.searchTaskByWords(words, page);
 		
-		//查找每用户名和资源名
-		CBoNormaluser cboUser = new CBoNormaluser();
-		CBoResource cboResource = new CBoResource();
+		//查找咨询师名和患者名
+		CBoCounselor cboCounselor = new CBoCounselor();
+		CBoPatient cboPatient = new CBoPatient();
 		
-		list = new ArrayList<DtoNuserclicked>();
+		list = new ArrayList<DtoTask>();
 		
 		//存到dto列表中
-		DtoNuserclicked dto;
-		for(Nuserclicked a:tList){
-			dto = new DtoNuserclicked();
-			dto.nuserclicked = a;
-			dto.DUserName = cboUser.searchNormaluserById(a.getIdUser()).getNickName();
-			dto.DResourceName = cboResource.searchResourceById(a.getIdResource()).getResourceName();
+		DtoTask dto;
+		for(Task a:tList){
+			dto = new DtoTask();
+			dto.task = a;
+			dto.DCouName = cboCounselor.searchCounselorById(a.getIdCounselor()).getCouName();
+			dto.DPatientName = cboPatient.searchPatientById(a.getIdPatient()).getPatientName();
 			list.add(dto);
 		}
 		return "success";
 	}
 
 	// dto类
-	public class DtoNuserclicked{
-		Nuserclicked nuserclicked;
-		String DUserName;
-		String DResourceName;
+	public class DtoTask{
+		Task task;
+		String DCouName;
+		String DPatientName;
 		// 必须有get，set方法，否则会出错
-		public Nuserclicked getNuserclicked() {
-			return nuserclicked;
+		public Task getTask() {
+			return task;
 		}
-		public void setNuserclicked(Nuserclicked nuserclicked) {
-			this.nuserclicked = nuserclicked;
+		public void setTask(Task task) {
+			this.task = task;
 		}
-		public String getDUserName() {
-			return DUserName;
+		public String getDCouName() {
+			return DCouName;
 		}
-		public void setDUserName(String dUserName) {
-			DUserName = dUserName;
+		public void setDCouName(String dCouName) {
+			DCouName = dCouName;
 		}
-		public String getDResourceName() {
-			return DResourceName;
+		public String getDPatientName() {
+			return DPatientName;
 		}
-		public void setDResourceName(String dResourceName) {
-			DResourceName = dResourceName;
+		public void setDPatientName(String dPatientName) {
+			DPatientName = dPatientName;
 		}
 	}
 }

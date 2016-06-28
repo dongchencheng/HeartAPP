@@ -164,10 +164,10 @@
                                 	<a href="flot.html"><i class="fa fa-folder-open fa-fw"></i> 患者自身信息</a>
                                 </li>
                                 <li>
-                                	<a href="flot.html"><i class="fa fa-tasks fa-fw"></i> 任务信息</a>
+                                	<a href="/HeartAPP/taskAction"><i class="fa fa-tasks fa-fw"></i> 任务信息</a>
                                 </li>
                                 <li>
-                                	<a href="flot.html"><i class="fa fa-check fa-fw"></i> 任务完成</a>
+                                	<a href="/HeartAPP/taskfinishedAction"><i class="fa fa-check fa-fw"></i> 任务完成</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->
